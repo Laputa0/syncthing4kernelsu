@@ -1,0 +1,6 @@
+id=syncthing
+name=Syncthing for KernelSU
+version=1.0
+versionCode=240719
+author=laputa
+description=Syncthing for KernelSU
