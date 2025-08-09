@@ -4,3 +4,4 @@ version=1.1
 versionCode=240722
 author=laputa
 description=Syncthing for KernelSU
+updateJson=https://raw.githubusercontent.com/Laputa0/syncthing4kernelsu/master/latest/update.json
