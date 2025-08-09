@@ -7,5 +7,6 @@ export XDG_STATE_HOME="${MODDIR}"
 export HOME="${MODDIR}"
 
 # flush logs
-rm -f $SYNCTHING_LOG
-$SYNCTHING_BIN &> ${MODDIR}/log.txt
+: > $SYNCTHING_LOG
+
+su $(id -n -u) -c "$SYNCTHING_BIN &> ${MODDIR}/log.txt"
