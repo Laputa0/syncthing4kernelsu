@@ -9,4 +9,4 @@ export HOME="${MODDIR}"
 # flush logs
 : > $SYNCTHING_LOG
 
-su $(id -n -u) -c "$SYNCTHING_BIN &> ${MODDIR}/log.txt"
+$SYNCTHING_BIN &> ${MODDIR}/log.txt
