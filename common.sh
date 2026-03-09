@@ -1,9 +1,10 @@
 ASH_STANDALONE=1
 
 MODDIR=${0%/*}
-SYNCTHING_BIN="/system/bin/syncthing"
+SYNCTHING_DIR="/data/local/syncthing"
 SYNCTHING_LOG="${MODDIR}/syncthing.log"
-SYNCTHING_HOME="/data/adb/syncthing"
+SYNCTHING_BIN="${SYNCTHING_DIR}/bin/syncthing"
+SYNCTHING_HOME="${SYNCTHING_DIR}/home"
 SYNCTHING_ARGS="--log-file=$SYNCTHING_LOG --log-level=INFO --log-max-size=1048576 --no-browser --no-restart --no-upgrade --home=$SYNCTHING_HOME"
 
 # redirect log file
@@ -21,7 +22,7 @@ function get_pid(){
 # start syncthing service
 function start_service(){
 	echo "$(date '+%Y-%m-%d %H:%M') | Syncthing starting..."
-	[[ -z "$(get_pid)" ]] && HOME="$SYNCTHING_HOME" $SYNCTHING_BIN $SYNCTHING_ARGS &>/dev/null &
+	[[ -z "$(get_pid)" ]] && su shell -c "HOME=\"$SYNCTHING_HOME\" $SYNCTHING_BIN $SYNCTHING_ARGS &>${SYNCTHING_DIR}/output.log &"
 	until [[ -n "$(get_pid)" ]]; do
 		sleep 1
 		echo "$(date '+%Y-%m-%d %H:%M') | syncthing started...*$(get_pid)*"
