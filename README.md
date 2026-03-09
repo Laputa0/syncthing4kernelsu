@@ -6,7 +6,8 @@ syncthing for kernelsu
 [![](https://docs.syncthing.net/_static/logo-horizontal.svg)](https://github.com/syncthing/syncthing)
 
 # log
-`4.0`: run with `shell` user
+`v4.1`: bug fix
+`v4.0`: run with shell user
 
 # readme
 syncthing binary install in /date/local/bin
