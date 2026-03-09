@@ -23,7 +23,7 @@ if [[ ! -d $syncthing_dir ]]; then
 fi
 
 ui_print "Deleting old syncthing..."
-rm -rf ${MODPATH}/bin
+rm -rf ${syncthing_dir}/bin
 ui_print "Copying new syncthing..."
 cp -rf ${MODPATH}/bin ${syncthing_dir}
 

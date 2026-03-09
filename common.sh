@@ -2,7 +2,7 @@ ASH_STANDALONE=1
 
 MODDIR=${0%/*}
 SYNCTHING_DIR="/data/local/syncthing"
-SYNCTHING_LOG="${MODDIR}/syncthing.log"
+SYNCTHING_LOG="${SYNCTHING_DIR}/service.log"
 SYNCTHING_BIN="${SYNCTHING_DIR}/bin/syncthing"
 SYNCTHING_HOME="${SYNCTHING_DIR}/home"
 SYNCTHING_ARGS="--log-file=$SYNCTHING_LOG --log-level=INFO --log-max-size=1048576 --no-browser --no-restart --no-upgrade --home=$SYNCTHING_HOME"
@@ -25,7 +25,9 @@ function start_service(){
 	[[ -z "$(get_pid)" ]] && su shell -c "HOME=\"$SYNCTHING_HOME\" $SYNCTHING_BIN $SYNCTHING_ARGS &>${SYNCTHING_DIR}/output.log &"
 	until [[ -n "$(get_pid)" ]]; do
 		sleep 1
-		echo "$(date '+%Y-%m-%d %H:%M') | syncthing started...*$(get_pid)*"
+		spid=$(get_pid)
+		echo "$(date '+%Y-%m-%d %H:%M') | syncthing started...*${spid}*"
+		sleep 1
 	done
 }
 
@@ -36,6 +38,7 @@ function stop_service(){
 	until [[ -z "$(get_pid)" ]]; do
 		sleep 1
 		echo "$(date '+%Y-%m-%d %H:%M') | syncthing stopped..."
+		sleep 1
 	done
 }
 
