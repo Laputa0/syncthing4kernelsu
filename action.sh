@@ -1,22 +1,8 @@
 source ./common.sh
 
-echo "Running..."
-
-pid_list=$(get_pid)
-if [[ -z "$pid_list" ]]
-then
-	echo "$(date '+%Y-%m-%d %H:%M') | ACTION: Starting Service..."
-	start_service
-	sleep 3
-	exit 0
-fi
-
-if [[ -n "$pid_list" ]]
-then
-	
-	echo "$(date '+%Y-%m-%d %H:%M') | ACTION: Stopping Service..."
+if status_service &>/dev/null; then
 	stop_service
-	sleep 3
-	exit 0
+	sleep 2
+else
+	start_service
 fi
-

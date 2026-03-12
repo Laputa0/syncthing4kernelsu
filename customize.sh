@@ -1,11 +1,10 @@
 ui_print "Syncthing for KernelSU."
 
 if [ $IS64BIT == true ]; then
-    echo "This device is arm64."
+    ui_print "This device is arm64."
 else
-    echo "This device isn't arm64."
-    ui_print "Failed."
-    exit
+    ui_print "This device isn't arm64."
+    abort "Failed."
 fi
 
 ui_print "Setting permissions..."
@@ -27,8 +26,8 @@ rm -rf ${syncthing_dir}/bin
 ui_print "Copying new syncthing..."
 cp -rf ${MODPATH}/bin ${syncthing_dir}
 
-ui_print "===================================="
+ui_print "========================================="
 ui_print "NOTICE: Please delete /data/local/syncthing manually after you deleted this module."
-ui_print "===================================="
+ui_print "========================================="
 
 ui_print "Success."

@@ -1,6 +1,6 @@
 {
-  "version": "4.1",
-  "versionCode": 41,
+  "version": "5.0",
+  "versionCode": 50,
   "zipUrl": "https://github.com/Laputa0/syncthing4kernelsu/releases/latest/download/syncthing4kernelsu.zip",
   "changelog": "https://raw.githubusercontent.com/Laputa0/syncthing4kernelsu/master/README.md"
 }

@@ -6,7 +6,8 @@ syncthing for kernelsu
 [![syncthing](https://docs.syncthing.net/_static/logo-horizontal.svg)](https://github.com/syncthing/syncthing)
 
 ### log
-`v4.1`: bug fix
+`v5.0`: 代码重构 
+`v4.1`: bug fix 
 `v4.0`: run with shell user
 
 ### readme
