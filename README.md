@@ -6,7 +6,9 @@ syncthing for kernelsu
 [![syncthing](https://docs.syncthing.net/_static/logo-horizontal.svg)](https://github.com/syncthing/syncthing)
 
 ### log
-`v5.1`: syncthing update to v2.0.16
+`v6.0`: 启动syncthing前自动检查更新 
+
+`v5.1`: syncthing update to v2.0.16 
 
 `v5.0`: 代码重构 
 

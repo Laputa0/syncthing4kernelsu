@@ -68,3 +68,42 @@ function stop_service(){
 	fi
 }
 
+# upgrade syncthing
+function upgrade_syncthing(){
+	# upgrade
+	local tmp_dir="/data/local/tmp/syncthing_tmp"
+	down_url=$(curl -s -L https://api.github.com/repos/syncthing/syncthing/releases/latest| \
+	    grep 'browser_download_url'|grep -Eo 'https://.*linux-arm64.*\.tar\.gz' || return 0)
+	rm -rf ${tmp_dir} && mkdir -p ${tmp_dir} && cd ${tmp_dir}
+	curl -L -o ${tmp_dir}/syncthing.tar.gz ${down_url} || return 0
+	tar -xzf ${tmp_dir}/syncthing.tar.gz || return 0
+	mv ${tmp_dir}/syncthing-linux-arm64-*/syncthing ${SERVE_BIN}
+	chown shell:shell ${SERVE_BIN}
+	chmod 755 ${SERVE_BIN}
+}
+
+
+# upgrade check
+function upgrade_check(){
+	echo "$(date '+%Y-%m-%d %H:%M')"
+	# return if no network
+	if [[ ! ping -c 2 baidu.com ]]; then
+		echo "no network."
+		return 0
+	fi
+
+	# file not found or other reason, need upgrade
+	su shell -c "$SERVE_BIN version" || upgrade_syncthing
+
+	# return if already latest version
+	c_ver=$(su shell -c "$SERVE_BIN version"|cut -d' ' -f2)
+	l_ver=$(curl -s -L https://api.github.com/repos/syncthing/syncthing/releases/latest| \
+		grep 'browser_download_url'|grep -Eo 'https://.*linux-arm64.*\.tar\.gz'| \
+		grep -Eo 'v[0-9]+\.[0-9]+\.[0-9]+'|head -1 || return 0)
+	if [[ "${c_ver:-0}" = "${l_ver:-1}" ]]; then
+		echo "already latest version: ${c_ver:-unknown}"
+		return 0
+	fi
+	echo "new version is available: ${l_ver:-unknown} (current: ${c_ver:-unknown})"
+	upgrade_syncthing
+}
