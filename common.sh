@@ -82,7 +82,6 @@ function upgrade_syncthing(){
 	chmod 755 ${SERVE_BIN}
 }
 
-
 # upgrade check
 function upgrade_check(){
 	echo "$(date '+%Y-%m-%d %H:%M')"
@@ -106,4 +105,19 @@ function upgrade_check(){
 	fi
 	echo "new version is available: ${l_ver:-unknown} (current: ${c_ver:-unknown})"
 	upgrade_syncthing
+}
+
+# button volume+ check
+function button_check() {
+	local times=$1
+	local tmp_events="/data/local/tmp/tmp_events"
+	for i in $(seq $times); do
+		timeout 1 /system/bin/getevent -lqc 1 2>&1 >$tmp_events &
+		sleep 0.5
+		if ($(grep -q 'KEY_VOLUMEUP *DOWN' $tmp_events)); then
+			return 0
+		else
+			return 1
+		fi
+	done
 }

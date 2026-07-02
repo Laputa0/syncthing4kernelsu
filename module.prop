@@ -1,7 +1,7 @@
 id=syncthing
 name=Syncthing for KernelSU
-version=6.0
-versionCode=60
+version=6.1
+versionCode=61
 author=laputa
 description=Syncthing for KernelSU
 updateJson=https://raw.githubusercontent.com/Laputa0/syncthing4kernelsu/refs/heads/main/update.json
