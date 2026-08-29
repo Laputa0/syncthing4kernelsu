@@ -82,11 +82,46 @@ function upgrade_syncthing(){
 	chmod 755 ${SERVE_BIN}
 }
 
+# button volume+ check
+function button_check() {
+	local timeout="${1:-10}"
+	local key event_file event_pid
+
+	event_file="${TMPDIR:-/data/local/tmp}/tmp_events.$$"
+
+	# 每秒轮询一次按键事件，避免无按键时被 getevent 无限阻塞。
+	while [ "$timeout" -gt 0 ]; do
+		: > "$event_file" || break
+		getevent -lqc 1 > "$event_file" 2> /dev/null &
+		event_pid=$!
+		sleep 1
+		key=$(cat "$event_file" 2> /dev/null)
+		kill "$event_pid" 2> /dev/null || true
+		wait "$event_pid" 2> /dev/null || true
+		rm -f "$event_file"
+		key=$(printf '%s\n' "$key" | grep -E "KEY_VOLUME(UP|DOWN)" | head -1)
+
+		if echo "$key" | grep -q "VOLUMEUP"; then
+			printf "up\n"
+			return 0
+		elif echo "$key" | grep -q "VOLUMEDOWN"; then
+			printf "down\n"
+			return 0
+		fi
+
+		timeout=$((timeout - 1))
+	done
+
+	# 超时未按键
+	printf "timeout\n"
+}
+
 # upgrade check
 function upgrade_check(){
 	echo "$(date '+%Y-%m-%d %H:%M')"
+	echo "正在检查新版本..."
 	# return if no network
-	if [[ ! ping -c 2 baidu.com ]]; then
+	if [[ ! curl -s -L https://api.github.com ]]; then
 		echo "no network."
 		return 0
 	fi
@@ -104,20 +139,13 @@ function upgrade_check(){
 		return 0
 	fi
 	echo "new version is available: ${l_ver:-unknown} (current: ${c_ver:-unknown})"
-	upgrade_syncthing
+	echo "请在5秒内按音量+键升级，否则跳过升级"
+	if [ "$(button_check 5)" = "up" ]; then
+		echo "Upgrade now..."
+		upgrade_syncthing
+	else
+		echo "Upgrade skipped..."
+		return 0
+	fi
 }
 
-# button volume+ check
-function button_check() {
-	local times=$1
-	local tmp_events="/data/local/tmp/tmp_events"
-	for i in $(seq $times); do
-		timeout 1 /system/bin/getevent -lqc 1 2>&1 >$tmp_events &
-		sleep 0.5
-		if ($(grep -q 'KEY_VOLUMEUP *DOWN' $tmp_events)); then
-			return 0
-		else
-			return 1
-		fi
-	done
-}
